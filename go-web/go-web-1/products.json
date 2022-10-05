@@ -1,0 +1,32 @@
+[
+    {
+        "id":1,
+        "name":"Iphone 11",
+        "color":"Black",
+        "price":3000,
+        "stock":10,
+        "code":"12abc",
+        "published":false,
+        "creation_date":"1998-01-01T00:00:00Z"
+    },
+    {
+        "id":2,
+        "name":"Iphone 13",
+        "color":"White",
+        "price":3000,
+        "stock":12,
+        "code":"12abc",
+        "published":true,
+        "creation_date":"2016-01-01T00:00:00Z"
+    },
+    {
+        "id":3,
+        "name":"Iphone 12",
+        "color":"Black",
+        "price":2000,
+        "stock":5,
+        "code":"12abc",
+        "published":true,
+        "creation_date":"2011-01-01T00:00:00Z"
+    }
+    ]
