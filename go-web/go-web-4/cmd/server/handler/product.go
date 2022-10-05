@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -9,10 +10,10 @@ import (
 )
 
 type request struct {
-	Name      string  `json:"name" binding:"required"`
+	Name      string  `json:"name"`
 	Color     string  `json:"color"`
-	Price     float64 `json:"price" binding:"required"`
-	Stock     int     `json:"stock" binding:"required"`
+	Price     float64 `json:"price"`
+	Stock     int     `json:"stock"`
 	Code      string  `json:"code"`
 	Published bool    `json:"published"`
 }
@@ -97,6 +98,13 @@ func (c *Product) Update() gin.HandlerFunc {
 			})
 			return
 		}
+		if field, ok := CheckFields(&req); !ok {
+			msg := fmt.Sprintf("Missing field %v", field)
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": msg,
+			})
+			return
+		}
 		p, err := c.service.Update(id, req.Name, req.Color, req.Code, req.Price, req.Stock, req.Published)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
@@ -121,6 +129,13 @@ func (c *Product) Store() gin.HandlerFunc {
 		if err := ctx.ShouldBind(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
+			})
+			return
+		}
+		if field, ok := CheckFields(&req); !ok {
+			msg := fmt.Sprintf("Missing field %v", field)
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": msg,
 			})
 			return
 		}
@@ -162,4 +177,68 @@ func (c *Product) Delete() gin.HandlerFunc {
 			"result": "success",
 		})
 	}
+}
+
+func (c *Product) UpdateNameAndPrice() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("token")
+		if token != "s3cr3t" {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"result": "Invalid token",
+			})
+			return
+		}
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "Invalid id",
+			})
+			return
+		}
+		var req request
+		if err := ctx.ShouldBind(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		p, err := c.service.UpdateNameAndPrice(id, req.Name, req.Price)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		ctx.JSON(http.StatusOK, p)
+	}
+}
+
+func CheckFields(req *request) (field string, ok bool) {
+	if req.Name == "" {
+		ok = false
+		field = "Name"
+		return
+	} else if req.Color == "" {
+		ok = false
+		field = "Color"
+		return
+	} else if req.Price == 0 {
+		ok = false
+		field = "Price"
+		return
+	} else if req.Stock == 0 {
+		ok = false
+		field = "Stock"
+		return
+	} else if req.Code == "" {
+		ok = false
+		field = "Code"
+		return
+	} else if !req.Published {
+		ok = false
+		field = "Published"
+		return
+	}
+	ok = true
+	return
 }

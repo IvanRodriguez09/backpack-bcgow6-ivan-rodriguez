@@ -25,6 +25,7 @@ type Repository interface {
 	Store(id int, name, color, code string, price float64, stock int, published bool) (Product, error)
 	GetLastId() (int, error)
 	Update(id int, name, color, code string, price float64, stock int, published bool) (Product, error)
+	UpdateNameAndPrice(id int, name string, price float64) (Product, error)
 	Delete(id int) error
 }
 
@@ -46,16 +47,20 @@ func (r *repository) GetAll() ([]Product, error) {
 }
 
 func (r *repository) GetById(id int) (Product, error) {
-	if id >= len(pList) {
-		return Product{}, fmt.Errorf("id %d out of range", id)
+	if id > len(pList) {
+		return Product{}, fmt.Errorf("product %d not found", id)
 	}
-	p := pList[id]
-	return p, nil
+	for _, p := range pList {
+		if p.Id == id {
+			return p, nil
+		}
+	}
+	return Product{}, fmt.Errorf("product %d not found", id)
 }
 
 func (r *repository) GetLastId() (int, error) {
 	if lastId == 0 {
-		return 0, fmt.Errorf("No products found")
+		return lastId, nil
 	} else {
 		return lastId, nil
 	}
@@ -72,6 +77,18 @@ func (r *repository) Update(id int, name, color, code string, price float64, sto
 	p.Price = price
 	p.Stock = stock
 	p.Published = published
+	pList[id-1] = p
+	return p, nil
+}
+
+func (r *repository) UpdateNameAndPrice(id int, name string, price float64) (Product, error) {
+	p, err := r.GetById(id)
+	if err != nil {
+		return Product{}, err
+	}
+	p.Name = name
+	p.Price = price
+	pList[id-1] = p
 	return p, nil
 }
 
