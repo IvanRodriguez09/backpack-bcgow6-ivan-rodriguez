@@ -1,0 +1,12 @@
+[
+ {
+  "id": 1,
+  "name": "Iphone 14",
+  "color": "Blue",
+  "price": 4500,
+  "stock": 15,
+  "code": "123asd",
+  "published": true,
+  "creation_date": "2022-10-05T18:53:37.716638-05:00"
+ }
+]
