@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	products "github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-testing/go-testing-2/internal/products/service"
-	"github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-web/go-web-5/pkg/web"
+	products "github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-testing/go-testing-3/internal/products"
+	"github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-testing/go-testing-3/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 

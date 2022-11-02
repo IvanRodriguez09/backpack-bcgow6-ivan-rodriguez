@@ -1,0 +1,22 @@
+/* Seleccionar el dni, nombre y apellido de los primeros 5 clientes de la tabla*/
+SELECT dni, first_name, last_name FROM Clients LIMIT 5;
+/* Seleccionar el dni, nombre y apellido de los clientes de apellido Pineda*/
+SELECT dni, first_name, last_name FROM Clients WHERE last_name="Pineda";
+/* Seleccionar el nombre, apellido, provincia y ciudad de los clientes que tengan el plan con id 1 */
+SELECT c.first_name, c.last_name, c.providence, c.city FROM Clients as c,  Clients_has_InternetPlans as cip WHERE c.dni = cip.Clients_dni AND cip.InternetPlans_id = 1; 
+/* Seleccionar los clientes que hayan nacido entre 1995 y el 2000 de organizandolos por fecha ascendente*/
+SELECT * FROM Clients WHERE YEAR(birthday) BETWEEN "1995" AND "2000" ORDER BY birthday;
+/* Seleccionar los clientes que se encuentren en la provincia de suba y tengan cuenten con el plan con id 5 */
+SELECT c.* FROM Clients as c,  Clients_has_InternetPlans as cip WHERE c.dni = cip.Clients_dni AND cip.InternetPlans_id = 1 AND c.providence="Suba"; 
+/* Seleccionar los clientes que cuenten con más de un plan */
+SELECT c.first_name, c.last_name, c.providence, c.city FROM Clients as c, (SELECT Clients_dni, COUNT(*) as plans FROM Clients_has_InternetPlans GROUP BY Clients_dni) as cip WHERE c.dni = cip.Clients_dni AND  cip.plans > 1;
+/* Listar todos los planes que tengan un valor por encima de 35000*/
+SELECT * FROM InternetPlans WHERE price > 35000;
+/* Listar el primer plan que tenga un descuento mayor al %10 */
+SELECT * FROM InternetPlans WHERE discount > 10 LIMIT 1;
+/* Listar todos los clientes que su nombre empiece por J*/
+SELECT * FROM Clients WHERE first_name LIKE "J%";
+/* Listar todos los clientes que su apellido empiece por P y recidan en bogotá*/
+SELECT * FROM Clients WHERE last_name LIKE "P%" AND city="Bogotá";
+/* Listar el nombre apellido de clientes con el id y el precio del plan que usan donde su plan tenga un valor mayor a 50000 */
+SELECT c.first_name, c.last_name, ip.id, ip.price FROM Clients as c,  Clients_has_InternetPlans as cip, InternetPlans as ip WHERE c.dni = cip.Clients_dni AND cip.InternetPlans_id = ip.id AND ip.price > 50000;

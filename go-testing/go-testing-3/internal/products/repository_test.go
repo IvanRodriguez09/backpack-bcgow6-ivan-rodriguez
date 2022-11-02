@@ -5,14 +5,12 @@ import (
 	"reflect"
 	"testing"
 
-	repository "github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-testing/go-testing-3/internal/products/repository"
-	service "github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-testing/go-testing-3/internal/products/service"
 	"github.com/stretchr/testify/assert"
 )
 
 type mockStore struct {
 	callReadMethod bool
-	datamock       []repository.Product
+	datamock       []Product
 	errRead        string
 	errWrite       string
 }
@@ -21,7 +19,7 @@ func (mockdb *mockStore) Read(data interface{}) error {
 	if mockdb.errRead != "" {
 		return fmt.Errorf(mockdb.errRead)
 	}
-	datainf := data.(*[]repository.Product)
+	datainf := data.(*[]Product)
 	*datainf = mockdb.datamock
 	mockdb.callReadMethod = true
 	return nil
@@ -31,14 +29,14 @@ func (mockdb *mockStore) Write(data interface{}) error {
 	if mockdb.errWrite != "" {
 		return fmt.Errorf(mockdb.errWrite)
 	}
-	datainf := data.([]repository.Product)
+	datainf := data.([]Product)
 	mockdb.datamock = datainf
 	return nil
 }
 
 func TestServiceIntegrationUpdate(t *testing.T) {
 	// Arrange
-	database := []repository.Product{
+	database := []Product{
 		{
 			Id:        1,
 			Name:      "Before Update",
@@ -56,8 +54,8 @@ func TestServiceIntegrationUpdate(t *testing.T) {
 		errWrite:       "",
 	}
 	// Act
-	repository := repository.NewRepository(&mockdb)
-	service := service.NewService(repository)
+	repository := NewRepository(&mockdb)
+	service := NewService(repository)
 	resultado, err := service.Update(1, "After Update", database[0].Color,
 		database[0].Code, database[0].Price, database[0].Stock, database[0].Published)
 	database[0].Name = "After Update"
@@ -69,7 +67,7 @@ func TestServiceIntegrationUpdate(t *testing.T) {
 
 func TestServiceIntegrationDelete(t *testing.T) {
 	// Arrange
-	database := []repository.Product{
+	database := []Product{
 		{
 			Id:        1,
 			Name:      "Before Update",
@@ -114,8 +112,8 @@ func TestServiceIntegrationDelete(t *testing.T) {
 		errWrite:       "",
 	}
 	// Act
-	repo := repository.NewRepository(&mockdb)
-	service := service.NewService(repo)
+	repo := NewRepository(&mockdb)
+	service := NewService(repo)
 	err := service.Delete(1)
 	err2 := service.Delete(10)
 	fmt.Printf("%+v\n", mockdb.datamock)
@@ -128,7 +126,7 @@ func TestServiceIntegrationDelete(t *testing.T) {
 }
 func TestServiceIntegrationGetAll(t *testing.T) {
 	// Arrange
-	database := []repository.Product{
+	database := []Product{
 		{
 			Id:        1,
 			Name:      "Before Update",
@@ -154,8 +152,8 @@ func TestServiceIntegrationGetAll(t *testing.T) {
 		errWrite: "",
 	}
 	// Act
-	repo := repository.NewRepository(&mockStore)
-	service := service.NewService(repo)
+	repo := NewRepository(&mockStore)
+	service := NewService(repo)
 	result, err := service.GetAll()
 
 	// Assert

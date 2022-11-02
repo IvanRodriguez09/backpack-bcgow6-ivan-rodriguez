@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-web/go-web-4/cmd/server/handler"
 	repository "github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-web/go-web-4/internal/products/repository"
 	service "github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-web/go-web-4/internal/products/service"
@@ -23,5 +25,7 @@ func main() {
 	pr.PATCH("/:id", p.UpdateNameAndPrice())
 	pr.DELETE("/:id", p.Delete())
 
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal(err.Error())
+	}
 }

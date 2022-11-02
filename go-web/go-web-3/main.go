@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -63,7 +64,9 @@ func main() {
 	router := gin.Default()
 	router.POST("/products", HandlerCreateProduct)
 	router.GET("/products", HandlerGetProducts)
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal(err.Error())
+	}
 }
 
 func HandlerCreateProduct(ctx *gin.Context) {

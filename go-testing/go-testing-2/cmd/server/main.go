@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/IvanRodriguez09/backpack-bcgow6-ivan-rodriguez/go-testing/go-testing-2/cmd/server/handler"
@@ -31,5 +32,7 @@ func main() {
 	pr.PATCH("/:id", p.UpdateNameAndPrice())
 	pr.DELETE("/:id", p.Delete())
 
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal(err.Error())
+	}
 }

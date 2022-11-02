@@ -23,45 +23,6 @@ type Product struct {
 
 const name = "Ivan"
 
-func writeJSON() {
-	products := []Product{
-		{
-			Id:        1,
-			Name:      "Iphone 13",
-			Color:     "Black",
-			Price:     3000,
-			Stock:     10,
-			Code:      "12abc",
-			Published: true,
-		},
-		{
-			Id:        2,
-			Name:      "Iphone 13",
-			Color:     "Black",
-			Price:     3000,
-			Stock:     10,
-			Code:      "12abc",
-			Published: true,
-		},
-		{
-			Id:        3,
-			Name:      "Iphone 13",
-			Color:     "Black",
-			Price:     3000,
-			Stock:     10,
-			Code:      "12abc",
-			Published: true,
-		},
-	}
-
-	jsonData, err := json.Marshal(products)
-	if err != nil {
-		log.Fatal("Error: ", err)
-	}
-	os.WriteFile("products.json", jsonData, 0644)
-
-}
-
 func readJSON() (products []Product) {
 
 	jsonData, err := os.ReadFile("products.json")
@@ -94,5 +55,7 @@ func main() {
 		})
 	})
 
-	router.Run()
+	if err := router.Run(); err != nil {
+		log.Fatal("Error: ", err)
+	}
 }

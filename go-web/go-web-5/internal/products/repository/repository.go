@@ -18,9 +18,6 @@ type Product struct {
 	CreationDate time.Time `json:"creation_date"`
 }
 
-var pList []Product
-var lastId int
-
 type Repository interface {
 	GetAll() ([]Product, error)
 	GetById(id int) (Product, error)
@@ -43,7 +40,9 @@ func NewRepository(db store.Store) Repository {
 
 func (r *repository) Store(id int, name, color, code string, price float64, stock int, published bool) (Product, error) {
 	var pList []Product
-	r.db.Read(&pList)
+	if err := r.db.Read(&pList); err != nil {
+		return Product{}, err
+	}
 	p := Product{id, name, color, price, stock, code, published, time.Now()}
 	pList = append(pList, p)
 	if err := r.db.Write(pList); err != nil {
@@ -54,13 +53,17 @@ func (r *repository) Store(id int, name, color, code string, price float64, stoc
 
 func (r *repository) GetAll() ([]Product, error) {
 	var pList []Product
-	r.db.Read(&pList)
+	if err := r.db.Read(&pList); err != nil {
+		return nil, err
+	}
 	return pList, nil
 }
 
 func (r *repository) GetById(id int) (Product, error) {
 	var pList []Product
-	r.db.Read(&pList)
+	if err := r.db.Read(&pList); err != nil {
+		return Product{}, err
+	}
 	for _, p := range pList {
 		if p.Id == id {
 			return p, nil
@@ -71,7 +74,9 @@ func (r *repository) GetById(id int) (Product, error) {
 
 func (r *repository) GetLastId() (int, error) {
 	var pList []Product
-	r.db.Read(&pList)
+	if err := r.db.Read(&pList); err != nil {
+		return 0, err
+	}
 	if err := r.db.Read(&pList); err != nil {
 		return 0, err
 	}
@@ -83,7 +88,9 @@ func (r *repository) GetLastId() (int, error) {
 
 func (r *repository) Update(id int, name, color, code string, price float64, stock int, published bool) (Product, error) {
 	var pList []Product
-	r.db.Read(&pList)
+	if err := r.db.Read(&pList); err != nil {
+		return Product{}, err
+	}
 	p, err := r.GetById(id)
 	if err != nil {
 		return Product{}, err
@@ -103,7 +110,9 @@ func (r *repository) Update(id int, name, color, code string, price float64, sto
 
 func (r *repository) UpdateNameAndPrice(id int, name string, price float64) (Product, error) {
 	var pList []Product
-	r.db.Read(&pList)
+	if err := r.db.Read(&pList); err != nil {
+		return Product{}, err
+	}
 	p, err := r.GetById(id)
 	if err != nil {
 		return Product{}, err
@@ -119,7 +128,9 @@ func (r *repository) UpdateNameAndPrice(id int, name string, price float64) (Pro
 
 func (r *repository) Delete(id int) error {
 	var pList []Product
-	r.db.Read(&pList)
+	if err := r.db.Read(&pList); err != nil {
+		return err
+	}
 	_, err := r.GetById(id)
 	if err != nil {
 		return err

@@ -22,48 +22,6 @@ type Product struct {
 	CreationDate time.Time `json:"creation_date"`
 }
 
-func writeJSON() {
-	products := []Product{
-		{
-			Id:           1,
-			Name:         "Iphone 13",
-			Color:        "Black",
-			Price:        3000,
-			Stock:        10,
-			Code:         "12abc",
-			Published:    true,
-			CreationDate: time.Now(),
-		},
-		{
-			Id:           2,
-			Name:         "Iphone 12",
-			Color:        "Black",
-			Price:        3000,
-			Stock:        12,
-			Code:         "12dfg",
-			Published:    true,
-			CreationDate: time.Now(),
-		},
-		{
-			Id:           3,
-			Name:         "Iphone 11",
-			Color:        "Black",
-			Price:        2000,
-			Stock:        5,
-			Code:         "12jkl",
-			Published:    false,
-			CreationDate: time.Now(),
-		},
-	}
-
-	jsonData, err := json.Marshal(products)
-	if err != nil {
-		log.Fatal("Error: ", err)
-	}
-	os.WriteFile("products.json", jsonData, 0644)
-
-}
-
 func readJSON() (products []Product) {
 
 	jsonData, err := os.ReadFile("../go-web-1/products.json")
@@ -89,7 +47,9 @@ func main() {
 		productsRoutes.GET("/:id", HandlerGetById)
 		productsRoutes.GET("/filter1", HandlerGetProductByPriceAndColor)
 	}
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal(err.Error())
+	}
 }
 
 func HandlerHome(c *gin.Context) {
